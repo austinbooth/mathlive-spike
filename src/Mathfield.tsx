@@ -1,21 +1,31 @@
-import { useEffect, useRef } from 'react'
-import { MathfieldElement } from 'mathlive'
+import { useEffect, useState, FC } from 'react'
+import { MathfieldElement, MathfieldOptions } from 'mathlive'
 
-const mfe = new MathfieldElement()
+export type MathfieldProps = {
+  // options?: Partial<MathfieldOptions>;
+  value: string;
+  onChange: (latex: string) => void;
+  className?: string;
+}
 
-const MathField = () => {
-  const mathFieldRef = useRef<MathfieldElement>(null)
+const MathField: FC<MathfieldProps> = ({ value, onChange, className }) => {
+  const [mathField, setMathField] = useState<MathfieldElement>()
 
   useEffect(() => {
-    if (!mathFieldRef.current) {
-      (mathFieldRef.current as any).setOptions({
-        // whatever
-      })
-    }
+    const mf = new MathfieldElement();
+    setMathField(mf);
   }, [])
 
+  useEffect(() => {
+    if (mathField) {
+      window.addEventListener('input', (e) => {
+        onChange((e.target as HTMLInputElement).value)
+      })
+    }
+  }, [mathField])
+
   return (
-    <math-field ref={mathFieldRef}>3\times10^7</math-field>
+    <math-field class={className}>{value}</math-field>
   )
 }
 
