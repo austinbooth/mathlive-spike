@@ -12,12 +12,12 @@ export type MathfieldProps = {
 new MathfieldElement()
 
 const MathField: FC<MathfieldProps> = ({ value, onChange, className }) => {
-  const mf = useRef<MathfieldElement>(null)
+  const mfRef = useRef<MathfieldElement>(null)
 
-  const handleInputChange = useCallback(() => onChange(mf.current?.value ?? ''), [onChange])
+  const handleInputChange = useCallback(() => onChange(mfRef.current?.value ?? ''), [onChange])
 
   useEffect( () => {
-    const refValue = mf.current
+    const refValue = mfRef.current
     refValue?.addEventListener('input', handleInputChange)
 
     return () => {
@@ -26,7 +26,7 @@ const MathField: FC<MathfieldProps> = ({ value, onChange, className }) => {
  }, [])
 
   return (
-    <math-field ref={mf} class={className}>{value}</math-field>
+    <math-field ref={mfRef} class={className}>{value}</math-field>
   )
 }
 
