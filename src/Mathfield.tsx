@@ -1,4 +1,4 @@
-import { useEffect, useRef, FC } from 'react'
+import { useEffect, useRef, FC, useCallback } from 'react'
 import { MathfieldElement, MathfieldOptions } from 'mathlive'
 
 export type MathfieldProps = {
@@ -14,8 +14,15 @@ new MathfieldElement()
 const MathField: FC<MathfieldProps> = ({ value, onChange, className }) => {
   const mf = useRef<MathfieldElement>(null)
 
+  const handleInputChange = useCallback(() => onChange(mf.current?.value ?? ''), [onChange])
+
   useEffect( () => {
-    mf.current?.addEventListener('input', () => onChange(mf.current?.value ?? ''))
+    const refValue = mf.current
+    refValue?.addEventListener('input', handleInputChange)
+
+    return () => {
+      refValue?.removeEventListener('input', handleInputChange)
+    }
  }, [])
 
   return (
