@@ -1,4 +1,4 @@
-import { useEffect, useState, FC } from 'react'
+import { useEffect, useRef, FC } from 'react'
 import { MathfieldElement, MathfieldOptions } from 'mathlive'
 
 export type MathfieldProps = {
@@ -8,24 +8,18 @@ export type MathfieldProps = {
   className?: string;
 }
 
+// The math-field does not work if the next line is commented out.
+new MathfieldElement()
+
 const MathField: FC<MathfieldProps> = ({ value, onChange, className }) => {
-  const [mathField, setMathField] = useState<MathfieldElement>()
+  const mf = useRef<MathfieldElement>(null)
 
-  useEffect(() => {
-    const mf = new MathfieldElement();
-    setMathField(mf);
-  }, [])
-
-  useEffect(() => {
-    if (mathField) {
-      window.addEventListener('input', (e) => {
-        onChange((e.target as HTMLInputElement).value)
-      })
-    }
-  }, [mathField])
+  useEffect( () => {
+    mf.current?.addEventListener('input', () => onChange(mf.current?.value ?? ''))
+ }, [])
 
   return (
-    <math-field class={className}>{value}</math-field>
+    <math-field ref={mf} class={className}>{value}</math-field>
   )
 }
 
