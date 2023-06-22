@@ -1,5 +1,5 @@
 import { useEffect, useRef, FC, useCallback } from 'react'
-import { MathfieldElement, MathfieldOptions } from 'mathlive'
+import { MathfieldElement, MathfieldOptions, VirtualKeyboardName, VirtualKeyboardLayout } from 'mathlive'
 
 export type MathfieldProps = {
   // options?: Partial<MathfieldOptions>;
@@ -19,7 +19,9 @@ const MathField: FC<MathfieldProps> = ({ value, onChange, className }) => {
   useEffect( () => {
     const refValue = mfRef.current
     refValue?.addEventListener('input', handleInputChange)
-
+    console.log(window.mathVirtualKeyboard)
+    window.mathVirtualKeyboard.layouts = ['minimalist'] as unknown as VirtualKeyboardName[]
+    // 'minimalist' isn't in this type even though it's in the docs - https://cortexjs.io/mathlive/guides/virtual-keyboards/
     return () => {
       refValue?.removeEventListener('input', handleInputChange)
     }
